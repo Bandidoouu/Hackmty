@@ -1,0 +1,97 @@
+{
+  "info": {
+    "name": "FinCoach API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:8000/health"
+      }
+    },
+    {
+      "name": "Budget Summary",
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:8000/budget/summary?user_id=1"
+      }
+    },
+    {
+      "name": "Create Goal",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"user_id\": 1, \"name\": \"Ahorro 14 d\\u00edas\", \"target_amount\": 400}"
+        },
+        "url": "http://localhost:8000/goals"
+      }
+    },
+    {
+      "name": "Checkin",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:8000/streak/checkin?user_id=1"
+      }
+    },
+    {
+      "name": "Simulate Paycheck",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"account_id\": \"ACC_DEMO\", \"amount\": 2500, \"description\": \"Nomina semanal\"}"
+        },
+        "url": "http://localhost:8000/nessie/simulate-paycheck"
+      }
+    },
+    {
+      "name": "Schedule Bill",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"account_id\": \"ACC_DEMO\", \"payee\": \"CFE\", \"amount\": 650, \"payment_date\": \"2025-10-30\"}"
+        },
+        "url": "http://localhost:8000/nessie/schedule-bill"
+      }
+    },
+    {
+      "name": "P2P Transfer",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"from_account\": \"ACC_1\", \"to_account\": \"ACC_2\", \"amount\": 200, \"description\": \"Caf\\u00e9\"}"
+        },
+        "url": "http://localhost:8000/nessie/p2p-transfer"
+      }
+    }
+  ]
+}

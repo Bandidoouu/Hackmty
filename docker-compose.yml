@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+  api:
+    build: ./backend
+    env_file: .env
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      - ./backend:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+  web:
+    build: ./frontend
+    env_file: .env
+    ports:
+      - "${FRONTEND_PORT:-5173}:5173"
+    volumes:
+      - ./frontend:/usr/src/app
+    command: npm run dev -- --host 0.0.0.0 --port 5173

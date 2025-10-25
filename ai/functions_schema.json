@@ -1,0 +1,112 @@
+{
+  "functions": [
+    {
+      "name": "get_budget_summary",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "user_id"
+        ]
+      }
+    },
+    {
+      "name": "create_goal",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "target_amount": {
+            "type": "number"
+          },
+          "due_date": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "user_id",
+          "name",
+          "target_amount"
+        ]
+      }
+    },
+    {
+      "name": "simulate_paycheck",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "account_id": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "schedule": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "account_id",
+          "amount"
+        ]
+      }
+    },
+    {
+      "name": "schedule_bill",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "account_id": {
+            "type": "string"
+          },
+          "payee": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "payment_date": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "account_id",
+          "payee",
+          "amount",
+          "payment_date"
+        ]
+      }
+    },
+    {
+      "name": "p2p_transfer",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "from_account": {
+            "type": "string"
+          },
+          "to_account": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "from_account",
+          "to_account",
+          "amount"
+        ]
+      }
+    }
+  ]
+}

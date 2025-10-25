@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body { @apply text-gray-800; }
+.card { @apply bg-white rounded-2xl shadow p-4; }
+.btn { @apply px-4 py-2 rounded-xl shadow; }
+.btn-primary { @apply bg-blue-600 text-white; }
