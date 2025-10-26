@@ -1,4 +1,4 @@
-<!doctype html>
+bot<!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8">
@@ -10,10 +10,12 @@
   <div class="caja user-page" id="user-box">
     <h1>Usuario</h1>
     <div class="user-grid">
+      <!-- Left panel: Banking (deposits, transfers, payroll, history) -->
       <div class="user-left">
-        <div id="user-info">Cargando...</div>
-        <div id="balance-area" style="margin-top:1rem;">Balance: cargando...</div>
-
+        <div class="bank-panel">
+          <h3>Banca</h3>
+          <div id="user-info">Cargando...</div>
+          <div id="balance-area" style="margin-top:1rem;">Balance: cargando...</div>
           <div id="left-msg" class="msg" style="display:none; margin-top:8px"></div>
           <div id="portfolio-summary" style="margin-top:12px; width:100%; text-align:left">
             <h4>Resumen</h4>
@@ -23,30 +25,32 @@
 
           <div id="user-actions" style="margin-top:1rem; width:100%"></div>
 
-        <div style="margin-top:1rem;">
-          <button id="logout-btn" class="comenzar-btn">Cerrar sesión</button>
+          <div id="tx-area" style="margin-top:1rem; width:100%">
+            <h3>Historial</h3>
+            <div id="tx-msg" class="msg" style="display:none"></div>
+            <div class="tx-scroll"><table id="tx-table" class="tx-table" style="width:100%; border-collapse:collapse; background:#fff"></table></div>
+          </div>
+
+          <div style="margin-top:1rem;">
+            <h3>Transferir</h3>
+            <label>Destino (account id)</label>
+            <input id="to-account" placeholder="LOCALACC-..." style="width:100%" />
+            <label style="margin-top:8px;display:block">Monto USD</label>
+            <input id="transfer-amount" type="number" step="0.01" style="width:100%" />
+            <div style="margin-top:8px;text-align:right"><button id="transfer-btn" class="comenzar-btn">Enviar</button></div>
+          </div>
+
+          <div style="margin-top:1rem;">
+            <button id="logout-btn" class="comenzar-btn">Cerrar sesión</button>
+          </div>
         </div>
       </div>
 
+      <!-- Right panel: Tools (Gemini integration, investments, price/trade) -->
       <div class="user-right">
-        <div id="tx-area" style="margin-top:0; width:100%">
-          <h3>Historial</h3>
-          <div id="tx-msg" class="msg" style="display:none"></div>
-          <div class="tx-scroll"><table id="tx-table" class="tx-table" style="width:100%; border-collapse:collapse; background:#fff"></table></div>
-        </div>
-
-        <div style="margin-top:1rem;">
-          <h3>Transferir</h3>
-          <label>Destino (account id)</label>
-          <input id="to-account" placeholder="LOCALACC-..." style="width:100%" />
-          <label style="margin-top:8px;display:block">Monto USD</label>
-          <input id="transfer-amount" type="number" step="0.01" style="width:100%" />
-          <div style="margin-top:8px;text-align:right"><button id="transfer-btn" class="comenzar-btn">Enviar</button></div>
-        </div>
-        
-        <!-- Tools panel: Gemini / Nessie quick tools -->
-        <div class="tools-panel" style="margin-top:2rem;">
+        <div class="tools-panel" style="margin-top:0;">
           <h3>Herramientas</h3>
+          <div id="gemini-mode" style="margin-bottom:8px"></div>
           <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
             <div style="flex:1;min-width:200px">
               <label>Symbol</label>
@@ -60,10 +64,12 @@
               <button id="tool-price-btn" class="small-btn">Consultar precio</button>
               <button id="tool-buy" class="small-btn">Buy</button>
               <button id="tool-sell" class="small-btn">Sell</button>
+              <button id="tool-advise" class="small-btn">Advise</button>
             </div>
           </div>
           <div id="tool-price" style="margin-top:8px;color:#234a57;font-weight:600">Precio: —</div>
           <div id="tool-msg" class="msg" style="display:none;margin-top:8px"></div>
+          <div id="advice-result" class="msg" style="display:none;margin-top:10px;white-space:pre-wrap"></div>
         </div>
       </div>
     </div>
@@ -121,6 +127,31 @@
   document.getElementById('logout-btn').addEventListener('click', ()=>{ localStorage.removeItem('access_token'); location.href='/_static/login.html'; });
   loadMe();
 
+  // --- Check Gemini integration mode and update UI
+  async function checkGeminiMode(){
+    try{
+      const r = await fetch('/gemini/info');
+      if(!r.ok) return;
+      const j = await r.json();
+      const container = document.getElementById('gemini-mode');
+      container.innerHTML = '';
+      const badge = document.createElement('span');
+      badge.className = 'badge';
+      // live only if we have both key+secret and execute_trades enabled
+      const live = j.has_api_key && j.has_api_secret && j.execute_trades;
+      if(live){ badge.classList.add('live'); badge.textContent = 'Gemini: LIVE'; }
+      else { badge.classList.add('demo'); badge.textContent = j.has_api_key ? 'Gemini: Demo (no secret)' : 'Gemini: Demo (no API key)'; }
+      container.appendChild(badge);
+      // enable/disable buy/sell depending on live flag
+      const buy = document.getElementById('tool-buy');
+      const sell = document.getElementById('tool-sell');
+      if(!live){ buy.setAttribute('disabled','true'); sell.setAttribute('disabled','true'); }
+      else { buy.removeAttribute('disabled'); sell.removeAttribute('disabled'); }
+    }catch(e){ console.error('checkGeminiMode', e); }
+  }
+  // call it once on load
+  checkGeminiMode();
+
   async function loadTransactions(){
     const token = localStorage.getItem('access_token');
     const tbl = document.getElementById('tx-table');
@@ -128,7 +159,9 @@
     try{
       const r = await fetch('/nessie/transactions?limit=50', { headers: { 'Authorization': 'Bearer '+token } });
       if(!r.ok){ tbl.innerHTML = '<tr><td>Error cargando transacciones</td></tr>'; return; }
-      const j = await r.json();
+  const j = await r.json();
+  // store last transactions for tools (advise payload)
+  window._lastTransactions = j.transactions || [];
       if(!j.transactions || j.transactions.length===0){ tbl.innerHTML = '<tr><td>No hay transacciones</td></tr>'; return; }
       const rows = j.transactions.map(t => `<tr><td>${new Date(t.created_at).toLocaleString()}</td><td>${t.description}</td><td style="text-align:right">${t.amount.toFixed(2)}</td></tr>`).join('');
       tbl.innerHTML = '<thead><tr><th>Fecha</th><th>Descripción</th><th>Importe (USD)</th></tr></thead><tbody>'+rows+'</tbody>';
@@ -205,11 +238,56 @@
     }catch(e){ msg.style.color='crimson'; msg.textContent = 'Error trade'; }
   }
 
+  // --- Advice tool (calls /gemini/advise with a summarized user payload)
+  async function doAdvise(){
+    const token = localStorage.getItem('access_token');
+    const advEl = document.getElementById('advice-result');
+    advEl.style.display = 'block'; advEl.style.color = '#1B4079'; advEl.textContent = 'Generando recomendación...';
+    try{
+      // build simple summary: total_usd from portfolio-usd element (parse number)
+      const usdText = (document.getElementById('portfolio-usd')?.textContent || 'USD disponible: 0').replace(/[^0-9\.\-]/g,'');
+      const total_usd = parseFloat(usdText) || 0;
+      const payload = { total_usd, transactions: window._lastTransactions || [], risk_profile: 'balanced' };
+      const r = await fetch('/gemini/advise', { method: 'POST', headers: { 'Authorization':'Bearer '+token, 'Content-Type':'application/json' }, body: JSON.stringify(payload) });
+      if(!r.ok){ const t = await r.text(); advEl.style.color = 'crimson'; advEl.textContent = 'Error advise: '+t; return; }
+      const j = await r.json();
+      // render concise human-friendly block
+      // Renderado en español, usando los campos devueltos
+      const mapType = (rec) => {
+        if(rec.type === 'invest') return 'INVERTIR';
+        if(rec.type === 'save') return 'AHORRAR';
+        if(rec.type === 'automation') return 'AUTOMATIZAR';
+        if(rec.type === 'advice') return 'CONSEJO';
+        return (rec.type || '').toString().toUpperCase();
+      }
+
+      // narrative (asesor) aparece primero si existe
+      if(j.narrative){
+        advEl.textContent = j.narrative + '\n\n';
+      }
+
+      let out = 'Puntuación: ' + (j.score ?? '') + '\n\n';
+      out += 'Razonamiento:\n' + (Array.isArray(j.rationale) ? j.rationale.join('\n') : String(j.rationale)) + '\n\n';
+      if(Array.isArray(j.recommendations) && j.recommendations.length>0){
+        out += 'Recomendaciones:\n';
+        j.recommendations.forEach((rec,idx)=>{
+          const title = `${idx+1}. ${mapType(rec)} - ${rec.instrument || rec.action || rec.advice || ''}`;
+          const amount = rec.amount ? (typeof rec.amount === 'number' ? ` $${rec.amount}` : ` ${rec.amount}`) : '';
+          out += `${title}${amount}\n   ${rec.rationale || ''}\n`;
+        });
+      } else {
+        out += 'No hay recomendaciones.';
+      }
+  advEl.style.color = '#1B4079'; advEl.textContent += out;
+    }catch(e){ console.error(e); advEl.style.color='crimson'; advEl.textContent = 'Error generating advice'; }
+  }
+
   // wire tool buttons
   document.addEventListener('click', function(e){
     if(e.target && e.target.id === 'tool-price-btn'){ fetchToolPrice(); }
     if(e.target && e.target.id === 'tool-buy'){ doToolTrade('buy'); }
     if(e.target && e.target.id === 'tool-sell'){ doToolTrade('sell'); }
+    if(e.target && e.target.id === 'tool-advise'){ doAdvise(); }
   });
 
   // --- Additional user actions: bootstrap account, simulate paycheck, refresh ---

@@ -1,16 +1,57 @@
-INFO:     127.0.0.1:52946 - "GET /gemini/price?symbol=BTCUSD HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50679 - "GET /gemini/price?symbol=BTCUSD HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55378 - "GET /gemini/price?symbol=BTCUSD HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55378 - "GET /_static/usuario.html HTTP/1.1" 304 Not Modified
-INFO:     127.0.0.1:55378 - "GET /_static/style.css HTTP/1.1" 304 Not Modified
-INFO:     127.0.0.1:55378 - "GET /auth/me HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55378 - "GET /nessie/balance HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55378 - "GET /nessie/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55378 - "POST /auth/nessie/bootstrap HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55378 - "GET /auth/me HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55378 - "GET /nessie/balance HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55378 - "GET /nessie/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55378 - "POST /auth/nessie/bootstrap HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55378 - "GET /auth/me HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55378 - "GET /nessie/balance HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55378 - "GET /nessie/transactions?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64902 - "GET /_static/index.html HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64909 - "GET /_static/index.html HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60751 - "GET /_static/index.html HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:60751 - "GET /_static/inversiones.html HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:60751 - "GET /gemini/price?symbol=BTCUSD HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60751 - "GET /_static/planes.html HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:60751 - "GET /_static/proyecciones.html HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:60751 - "GET /_static/educacion.html HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:60751 - "GET /_static/signup.html HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:60751 - "GET /_static/login.html HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:60751 - "POST /auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60751 - "GET /_static/usuario.html HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:61817 - "GET /gemini/info HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60751 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60751 - "GET /nessie/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60751 - "GET /nessie/transactions?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57248 - "POST /nessie/transfer HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57248 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57248 - "GET /nessie/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57248 - "GET /nessie/transactions?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64457 - "POST /nessie/transfer HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64457 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64457 - "GET /nessie/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64457 - "GET /nessie/transactions?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64457 - "POST /nessie/transfer HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64457 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64457 - "GET /nessie/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64457 - "GET /nessie/transactions?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61775 - "POST /nessie/transfer HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61775 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61775 - "GET /nessie/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61775 - "GET /nessie/transactions?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55407 - "POST /auth/nessie/bootstrap HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55407 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55407 - "GET /nessie/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55407 - "GET /nessie/transactions?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55407 - "POST /nessie/simulate-paycheck HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55407 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55407 - "GET /nessie/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55407 - "GET /nessie/transactions?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50385 - "POST /nessie/transfer HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50385 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50385 - "GET /nessie/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50385 - "GET /nessie/transactions?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49254 - "POST /nessie/transfer HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49254 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49254 - "GET /nessie/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49254 - "GET /nessie/transactions?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62349 - "POST /nessie/transfer HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62349 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62349 - "GET /nessie/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62349 - "GET /nessie/transactions?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51229 - "POST /nessie/transfer HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51229 - "GET /auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51229 - "GET /nessie/balance HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51229 - "GET /nessie/transactions?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55955 - "POST /gemini/advise HTTP/1.1" 200 OK
