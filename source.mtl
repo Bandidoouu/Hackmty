@@ -1,0 +1,47 @@
+newmtl Color_0
+Kd 0.8386 0.6082 0.1711
+
+newmtl Color_1
+Kd 0.8611 0.634 0.1982
+
+newmtl Color_2
+Kd 0.8752 0.6484 0.2173
+
+newmtl Color_3
+Kd 0.8128 0.5741 0.137
+
+newmtl Color_4
+Kd 0.7759 0.5261 0.0986
+
+newmtl Color_5
+Kd 0.7361 0.4687 0.0614
+
+newmtl Color_6
+Kd 0.671 0.4173 0.0498
+
+newmtl Color_7
+Kd 0.5953 0.3649 0.0406
+
+newmtl Color_8
+Kd 0.5093 0.295 0.031
+
+newmtl Color_9
+Kd 0.4102 0.2245 0.0358
+
+newmtl Color_10
+Kd 0.3105 0.1628 0.0397
+
+newmtl Color_11
+Kd 0.1139 0.0525 0.0128
+
+newmtl Color_12
+Kd 0.2157 0.1061 0.0176
+
+newmtl Color_13
+Kd 0.4711 0.2813 0.1378
+
+newmtl Color_14
+Kd 0.8452 0.7616 0.6355
+
+newmtl Color_15
+Kd 0.7283 0.6002 0.3808

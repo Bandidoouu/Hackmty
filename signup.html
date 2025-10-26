@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sign Up</title>
+  <link rel="stylesheet" href="/_static/style.css">
+  <style>.caja{max-width:600px;margin:40px auto;padding:32px;text-align:center}</style>
+</head>
+<body>
+  <div class="caja">
+    <h1>Registro</h1>
+    <form id="register-form">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <input name="first_name" placeholder="Nombre" />
+        <input name="last_name" placeholder="Apellido" />
+      </div>
+      <input name="email" type="email" placeholder="Correo electrónico" required />
+      <input name="password" type="password" placeholder="Contraseña (mín 6)" required minlength="6" />
+      <h4>Dirección</h4>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <input name="street_number" placeholder="Número" />
+        <input name="street_name" placeholder="Calle" />
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <input name="city" placeholder="Ciudad" />
+        <input name="state" placeholder="Estado" />
+        <input name="zip" placeholder="CP" />
+      </div>
+      <div style="margin-top:1rem;">
+          <button type="submit" class="comenzar-btn">Registrarme</button>
+        </div>
+      </form>
+      <p id="register-msg" class="msg" style="display:block"></p>
+    <p style="margin-top:1rem"><a href="/_static/login.html">Ya tengo cuenta — Iniciar sesión</a></p>
+  </div>
+
+  <script>
+  document.getElementById('register-form').addEventListener('submit', async function(e){
+    e.preventDefault();
+    const f = e.target;
+    const payload = {
+      email: f.email.value,
+      password: f.password.value,
+      first_name: f.first_name.value,
+      last_name: f.last_name.value,
+      address: {
+        street_number: f.street_number.value || '0',
+        street_name: f.street_name.value || '',
+        city: f.city.value || '',
+        state: f.state.value || '',
+        zip: f.zip.value || ''
+      }
+    };
+    try{
+      const res = await fetch('/auth/register', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+      const data = await res.json();
+      const msg = document.getElementById('register-msg');
+      if(!res.ok){
+        msg.textContent = data.detail || JSON.stringify(data);
+        msg.style.color = 'crimson';
+        return;
+      }
+      msg.textContent = 'Registrado correctamente. Redirigiendo a login...';
+      msg.style.color = '#1B4079';
+      setTimeout(()=> location.href = '/_static/login.html', 1200);
+    }catch(err){
+      const msg = document.getElementById('register-msg');
+      msg.textContent = 'Error al registrar';
+      msg.style.color = 'crimson';
+    }
+  });
+  </script>
+</body>
+</html>

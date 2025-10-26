@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Login</title>
+  <link rel="stylesheet" href="/_static/style.css">
+  <style>.caja{max-width:600px;margin:40px auto;padding:32px;text-align:center}</style>
+</head>
+<body>
+  <div class="caja">
+    <h1>Iniciar sesión</h1>
+    <form id="login-form">
+      <input name="email" type="email" placeholder="Correo electrónico" required />
+      <input name="password" type="password" placeholder="Contraseña" required />
+      <div style="margin-top:1rem;">
+        <button type="submit" class="comenzar-btn">Entrar</button>
+      </div>
+    </form>
+    <p id="login-msg" class="msg" style="display:block"></p>
+    <p style="margin-top:1rem"><a href="/_static/signup.html">¿No tienes cuenta? Regístrate</a></p>
+  </div>
+
+  <script>
+  document.getElementById('login-form').addEventListener('submit', async function(e){
+    e.preventDefault();
+    const f = e.target;
+    const payload = { email: f.email.value, password: f.password.value };
+    const msg = document.getElementById('login-msg');
+    msg.textContent = '';
+    try{
+      const res = await fetch('/auth/login', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+      const data = await res.json();
+      if(!res.ok){
+        msg.textContent = data.detail || JSON.stringify(data);
+        msg.style.color = 'crimson';
+        return;
+      }
+      // save token
+      localStorage.setItem('access_token', data.access_token);
+      msg.textContent = 'Autenticado. Redirigiendo...';
+      msg.style.color = '#1B4079';
+      setTimeout(()=> location.href = '/_static/usuario.html', 700);
+    }catch(err){
+      msg.textContent = 'Error al iniciar sesión';
+      msg.style.color = 'crimson';
+    }
+  });
+  </script>
+</body>
+</html>
