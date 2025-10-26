@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Banco - Aplicación</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="navbar-logo">Banco Ejemplo</a>
+        <div class="navbar-menu">
+            <a href="usuario.html" class="login-btn">Mi aplicación</a>
+            <a href="admin.html" class="signup-btn">Admin</a>
+        </div>
+    </nav>
+    <main class="main-flex" style="justify-content:center;align-items:flex-start;min-height:80vh;">
+        <div class="right-text" style="width:100%;max-width:900px;margin:auto;">
+            <div class="welcome-message" style="margin-bottom:2rem;text-align:center;width:100%;">
+                Bienvenido a tu banca digital
+                <span>Accede a todas tus herramientas financieras</span>
+            </div>
+            <div id="usuario-info" style="text-align:right;margin-bottom:1rem;font-size:1.1rem;color:#4D7C8A;font-weight:500;"></div>
+            <button id="logout-btn" class="comenzar-btn" style="width:160px;margin-bottom:2rem;float:right;display:flex;align-items:center;justify-content:center;gap:8px;">
+                <span style="font-size:1.3rem;">🚪</span> Cerrar sesión
+            </button>
+            <section class="cajas-section" style="margin-top:0;display:flex;flex-direction:row;flex-wrap:nowrap;gap:32px;justify-content:center;align-items:stretch;">
+                <a href="transacciones.html" class="caja" style="text-decoration:none;">
+                    <h3>Transacciones</h3>
+                    <p>Consulta y gestiona tus movimientos bancarios.</p>
+                </a>
+                <a href="#analisis" class="caja" style="text-decoration:none;">
+                    <h3>Análisis de gastos</h3>
+                    <p>Visualiza y analiza tus patrones de consumo.</p>
+                </a>
+                <a href="#inversiones" class="caja" style="text-decoration:none;">
+                    <h3>Inversiones</h3>
+                    <p>Explora opciones para invertir tu dinero.</p>
+                </a>
+                <a href="#planes" class="caja" style="text-decoration:none;">
+                    <h3>Planes de ahorro</h3>
+                    <p>Configura y sigue tus metas de ahorro.</p>
+                </a>
+            </section>
+            <section id="transacciones" style="margin-top:3rem;">
+                <h2 style="color:#1B4079;">Transacciones</h2>
+                <p>Aquí podrás ver y gestionar tus movimientos bancarios.</p>
+                <!-- Aquí irá la funcionalidad de transacciones -->
+            </section>
+            <section id="analisis" style="margin-top:3rem;">
+                <h2 style="color:#1B4079;">Análisis de gastos</h2>
+                <p>Visualiza y analiza tus gastos mensuales.</p>
+                <!-- Aquí irá la funcionalidad de análisis de gastos -->
+            </section>
+            <section id="inversiones" style="margin-top:3rem;">
+                <h2 style="color:#1B4079;">Inversiones</h2>
+                <p>Explora y administra tus inversiones.</p>
+                <!-- Aquí irá la funcionalidad de inversiones -->
+            </section>
+            <section id="planes" style="margin-top:3rem;">
+                <h2 style="color:#1B4079;">Planes de ahorro</h2>
+                <p>Configura y sigue tus metas de ahorro.</p>
+                <!-- Aquí irá la funcionalidad de planes de ahorro -->
+            </section>
+        </div>
+    </main>
+    <script>
+    // Mostrar usuario actual
+    const usuarioActual = localStorage.getItem('usuarioLogueado');
+    const infoDiv = document.getElementById('usuario-info');
+    if (usuarioActual) {
+        infoDiv.textContent = `Usuario: ${usuarioActual}`;
+    } else {
+        infoDiv.textContent = 'No has iniciado sesión.';
+    }
+    // Botón cerrar sesión con confirmación
+    document.getElementById('logout-btn').addEventListener('click', function() {
+        if (confirm('¿Seguro que quieres cerrar sesión?')) {
+            localStorage.removeItem('usuarioLogueado');
+            window.location.href = 'login.html';
+        }
+    });
+    </script>
+</body>
+</html>
