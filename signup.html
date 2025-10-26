@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Banco Ejemplo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="navbar-logo">Banco Ejemplo</a>
+        <div class="navbar-menu">
+            <a href="signup.html" class="signup-btn">Sign Up</a>
+            <a href="login.html" class="login-btn">Login</a>
+        </div>
+    </nav>
+    <main class="main-flex">
+        <div class="right-text" style="width:100%;max-width:600px;margin:auto;">
+            <div class="welcome-message" style="margin-bottom:2rem;">
+                ¡Crea tu cuenta!
+                <span>Llena tus datos para registrarte</span>
+            </div>
+            <form class="caja" id="signup-form" style="width:100%;max-width:400px;margin:auto;">
+                <div class="signup-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;">
+                    <div style="display:flex;flex-direction:column;gap:1.2rem;">
+                        <input type="text" name="nombre" id="nombre" placeholder="Nombre" required minlength="2" maxlength="40" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+">
+                        <div class="error-message" id="error-nombre"></div>
+                        <input type="text" name="calle" id="calle" placeholder="Calle" required minlength="2" maxlength="50">
+                        <div class="error-message" id="error-calle"></div>
+                        <input type="text" name="municipio" id="municipio" placeholder="Municipio" required minlength="2" maxlength="40">
+                        <div class="error-message" id="error-municipio"></div>
+                        <input type="text" name="codigo_postal" id="codigo_postal" placeholder="Código Postal" required pattern="[0-9]{5}" maxlength="5">
+                        <div class="error-message" id="error-codigo_postal"></div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:1.2rem;">
+                        <input type="text" name="apellidos" id="apellidos" placeholder="Apellidos" required minlength="2" maxlength="60" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+">
+                        <div class="error-message" id="error-apellidos"></div>
+                        <input type="text" name="numero" id="numero" placeholder="Número" required pattern="[0-9A-Za-z]+" maxlength="10">
+                        <div class="error-message" id="error-numero"></div>
+                        <input type="text" name="estado" id="estado" placeholder="Estado" required minlength="2" maxlength="40">
+                        <div class="error-message" id="error-estado"></div>
+                    </div>
+                </div>
+                <input type="email" name="email" id="email" placeholder="Email" required style="margin-top:1.2rem;width:100%;">
+                <div class="error-message" id="error-email"></div>
+                <div style="position:relative;width:100%;margin-top:1.2rem;">
+                    <input type="password" name="password" id="password" placeholder="Contraseña" required minlength="8" maxlength="32" pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-={}:;,.?]).{8,32}" style="padding-right:2.5rem;width:100%;">
+                    <span id="toggle-password" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:1.3rem;color:#4D7C8A;user-select:none;">👁️</span>
+                </div>
+                <div class="error-message" id="error-password"></div>
+                <button type="submit" class="comenzar-btn" style="margin-top:2rem;width:100%;max-width:100%;">Registrarse</button>
+                <div id="signup-success" style="display:none;color:#4D7C8A;font-weight:700;text-align:center;margin-top:2rem;">¡Registro exitoso! Serás redirigido al login.</div>
+            </form>
+        </div>
+    </main>
+    <script>
+    function showError(inputId, message) {
+        document.getElementById('error-' + inputId).textContent = message;
+    }
+    function clearErrors() {
+        const errors = document.querySelectorAll('.error-message');
+        errors.forEach(e => e.textContent = '');
+    }
+    document.getElementById('toggle-password').addEventListener('click', function() {
+        const pwd = document.getElementById('password');
+        if (pwd.type === 'password') {
+            pwd.type = 'text';
+            this.textContent = '🙈';
+        } else {
+            pwd.type = 'password';
+            this.textContent = '👁️';
+        }
+    });
+    document.getElementById('signup-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        clearErrors();
+        
+        // Simple validation flag
+        let valid = true;
+        
+        // You can add more robust validation here if needed
+        
+        if (valid) {
+            const payload = {
+                first_name: document.getElementById('nombre').value,
+                last_name: document.getElementById('apellidos').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                address: {
+                    street_name: document.getElementById('calle').value,
+                    street_number: document.getElementById('numero').value,
+                    city: document.getElementById('municipio').value,
+                    state: document.getElementById('estado').value,
+                    zip: document.getElementById('codigo_postal').value
+                }
+            };
+
+            try {
+                const res = await fetch('http://localhost:8000/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    document.getElementById('signup-success').style.display = 'block';
+                    this.reset();
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                } else {
+                    const error = await res.json();
+                    document.getElementById('signup-success').style.display = 'none';
+                    // Display a generic error or a specific one if available
+                    showError('email', error.detail || 'Error al registrar usuario. El email podría ya estar en uso.');
+                }
+            } catch (err) {
+                showError('password', 'No se pudo conectar al servidor');
+            }
+        }
+    });
+    </script>
+</body>
+</html>
