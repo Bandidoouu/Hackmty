@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			const navbar = document.querySelector('.navbar');
+			let isSideMenu = false;
+			window.addEventListener('scroll', function() {
+				if (window.scrollY > 100 && !isSideMenu) {
+					navbar.classList.add('side-navbar');
+					isSideMenu = true;
+				} else if (window.scrollY <= 100 && isSideMenu) {
+					navbar.classList.remove('side-navbar');
+					isSideMenu = false;
+				}
+			});
+		});
+	</script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Banco Ejemplo</title>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+	<style>
+		.side-navbar {
+			width: 56px !important;
+			min-width: 56px !important;
+			max-width: 56px !important;
+			height: auto !important;
+			transition: width 0.35s cubic-bezier(.4,0,.2,1), box-shadow 0.3s;
+			overflow-x: hidden;
+			align-items: flex-start !important;
+			justify-content: flex-start !important;
+			padding-top: 2rem !important;
+		}
+		.side-navbar:hover {
+			width: 260px !important;
+			min-width: 260px !important;
+			max-width: 260px !important;
+			box-shadow: 8px 0 32px rgba(27, 64, 121, 0.18);
+		}
+		.side-navbar .navbar-menu {
+			flex-direction: column !important;
+			align-items: flex-start !important;
+			gap: 2rem !important;
+			width: 100%;
+			text-align: left !important;
+			margin-top: 0 !important;
+		}
+		.side-navbar .navbar-menu a {
+			opacity: 0;
+			transform: translateX(-20px);
+			transition: opacity 0.25s, transform 0.35s cubic-bezier(.4,0,.2,1);
+			white-space: nowrap;
+			width: 200px;
+			padding: 0.7rem 1.2rem;
+			border-radius: 8px;
+			background: transparent;
+		}
+		.side-navbar:hover .navbar-menu a {
+			opacity: 1;
+			transform: translateX(0);
+			background: rgba(27, 64, 121, 0.85);
+			color: #fff;
+		}
+		.side-navbar .navbar-logo {
+			margin-bottom: 2rem;
+			margin-right: 0;
+			opacity: 0;
+			transition: opacity 0.2s;
+		}
+		.side-navbar:hover .navbar-logo {
+			opacity: 1;
+		}
+		.side-navbar {
+			position: fixed !important;
+			top: 0 !important;
+			left: 0 !important;
+			width: 80vw !important;
+			max-width: 320px !important;
+			min-width: 180px !important;
+			height: 100vh !important;
+			border-radius: 0 32px 32px 0 !important;
+			flex-direction: column !important;
+			align-items: flex-start !important;
+			justify-content: flex-start !important;
+			padding: 2rem 1rem 2rem 1rem !important;
+			z-index: 1000 !important;
+			box-shadow: 8px 0 32px rgba(27, 64, 121, 0.18);
+		}
+		.side-navbar .navbar-logo {
+			margin-bottom: 2rem;
+			margin-right: 0;
+		}
+		.side-navbar .navbar-menu {
+			flex-direction: column !important;
+			align-items: flex-start !important;
+			gap: 2rem !important;
+			width: 100%;
+			text-align: left !important;
+		}
+		@media (max-width: 700px) {
+			.navbar {
+				flex-direction: column;
+				align-items: stretch;
+				padding: 1rem 2vw;
+				height: auto;
+			}
+			.navbar-menu {
+				justify-content: center;
+				flex-wrap: wrap;
+				gap: 1vw;
+			}
+			.navbar-register {
+				align-items: stretch;
+				width: 100%;
+				gap: 2vw;
+			}
+			.signup-btn, .login-btn {
+				width: 100%;
+				min-width: unset;
+				max-width: unset;
+				margin-bottom: 0.5rem;
+			}
+		}
+		:root {
+			--color1: #1B4079;
+			--color2: #4D7C8A;
+			--color3: #7F9C96;
+			--color4: #8FAD88;
+			--color5: #CBDF90;
+		}
+		html {
+			height: auto;
+			min-height: 100%;
+		}
+		body {
+			min-height: 100vh;
+			width: 100vw;
+			box-sizing: border-box;
+			font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+			background: #fff;
+			overflow-x: hidden;
+			overflow-y: auto;
+			display: block;
+		}
+		.navbar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			background: rgba(27, 64, 121, 0.95);
+			color: white;
+			padding: 0.5rem 2rem;
+			height: 80px;
+			box-shadow: 0 4px 16px rgba(27, 64, 121, 0.2);
+			position: relative;
+			z-index: 2;
+		}
+		.navbar-left {
+			display: flex;
+			align-items: center;
+		}
+		.bank-logo {
+			width: 48px;
+			height: 48px;
+			background: linear-gradient(135deg, var(--color5) 60%, var(--color4) 100%);
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin-right: 1rem;
+			font-weight: bold;
+			color: var(--color1);
+			font-size: 1.5rem;
+			box-shadow: 0 2px 8px rgba(27, 64, 121, 0.15);
+		}
+		.bank-name {
+			font-size: 2rem;
+			font-weight: 700;
+			letter-spacing: 1px;
+		}
+		.navbar-right a {
+			text-decoration: none;
+		}
+		.navbar-right button {
+			margin-left: 1rem;
+			padding: 0.7rem 2rem;
+			border: none;
+			border-radius: 25px;
+			font-size: 1.3rem;
+			cursor: pointer;
+			font-weight: 700;
+			font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+			transition: background 0.2s, box-shadow 0.2s;
+			box-shadow: 0 2px 8px rgba(27, 64, 121, 0.15);
+		}
+		.signup-btn {
+			background: rgba(143, 173, 136, 0.85);
+			color: #fff;
+		}
+		.signup-btn:hover {
+			background: rgba(203, 223, 144, 0.95);
+			box-shadow: 0 4px 16px rgba(143, 173, 136, 0.25);
+		}
+		.login-btn {
+			background: rgba(77, 124, 138, 0.85);
+			color: #fff;
+		}
+		.login-btn:hover {
+			background: rgba(27, 64, 121, 0.95);
+			box-shadow: 0 4px 16px rgba(77, 124, 138, 0.25);
+		}
+		.main-content {
+			min-height: calc(100vh - 80px);
+			display: flex;
+			align-items: flex-start;
+			justify-content: flex-end;
+			position: relative;
+			margin-top: 100px;
+			width: 100vw;
+			box-sizing: border-box;
+		}
+		.navbar {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			min-width: 0;
+			max-width: 100vw;
+			box-sizing: border-box;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: rgba(27, 64, 121, 0.85);
+			box-shadow: 0 8px 32px rgba(27, 64, 121, 0.18);
+			border-radius: 0 0 32px 32px;
+			padding: 1rem 2vw;
+			height: auto;
+			z-index: 10;
+		}
+		.navbar-logo {
+			font-size: 2rem;
+			font-weight: 700;
+			letter-spacing: 2px;
+			color: #fff;
+			margin-right: 2vw;
+			white-space: nowrap;
+		}
+		.navbar-menu {
+			display: flex;
+			gap: 2vw;
+			flex: 1;
+			justify-content: flex-end;
+			flex-wrap: wrap;
+			align-items: center;
+			text-align: right;
+		}
+		.navbar-menu a {
+			text-decoration: none;
+			color: #fff;
+			font-size: 1.1rem;
+			font-weight: 500;
+			padding: 0.2rem 0.5rem;
+			border-radius: 4px;
+			transition: background 0.2s;
+		}
+		.navbar-menu a:hover {
+			background: rgba(77, 124, 138, 0.15);
+		}
+		.navbar-register {
+			margin-left: auto;
+			display: flex;
+			gap: 1vw;
+			flex-shrink: 0;
+		}
+		.signup-btn, .login-btn {
+			background: #fff;
+			color: #1B4079;
+			border: none;
+			border-radius: 8px;
+			font-size: 1.1rem;
+			font-weight: 600;
+			padding: 0.6rem 2.2rem;
+			cursor: pointer;
+			box-shadow: 0 2px 8px rgba(27, 64, 121, 0.10);
+			transition: background 0.2s, color 0.2s;
+			min-width: 140px;
+			max-width: 220px;
+			white-space: nowrap;
+			overflow: visible;
+			text-overflow: unset;
+		}
+		.signup-btn:hover, .login-btn:hover {
+			background: #35506b;
+			color: #fff;
+		}
+		.welcome-message {
+			color: #111;
+			font-size: 3vw;
+			font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+			font-weight: 700;
+			text-align: center;
+			line-height: 1.1;
+			text-shadow: 0 4px 24px rgba(27, 64, 121, 0.10), 0 1px 0 rgba(77, 124, 138, 0.05);
+			letter-spacing: 2px;
+			width: 100%;
+		}
+		.welcome-message span {
+			display: block;
+			color: #111;
+			font-size: 3vw;
+			font-weight: 700;
+			margin-top: 1.5rem;
+			text-shadow: 0 4px 24px rgba(143, 173, 136, 0.10);
+			font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+		}
+		@media (max-width: 900px) {
+			.main-content {
+				flex-direction: column;
+			}
+			.left-section, .right-section {
+				min-width: unset;
+				padding: 1rem;
+			}
+			.welcome-message, .welcome-message span {
+				font-size: 9vw;
+			}
+		}
+	</style>
+</head>
+<body>
+	<nav class="navbar">
+		<div class="navbar-logo">BANK</div>
+		<div class="navbar-menu">
+			<a href="#">Planes de ahorro</a>
+			<a href="#">Inversiones</a>
+			<a href="#">Proyecciones</a>
+			<a href="#">Educación financiera</a>
+		</div>
+		<!-- Botones de registro y log in eliminados -->
+	</nav>
+	<div class="main-content">
+		<div class="welcome-message">
+			Bienvenido al fin de tus miedos.<br>
+			<span>iNVIERTE, EDUCATE Y ADMINISTRATE.</span>
+		</div>
+	</div>
+	<div class="scroll-space"></div>
+	<section id="planes" class="menu-section">
+		<h2>Planes de ahorro</h2>
+		<div class="section-content">
+			<!-- Espacio para información de Planes de ahorro -->
+		</div>
+	</section>
+	<section id="inversiones" class="menu-section">
+		<h2>Inversiones</h2>
+		<div class="section-content">
+			<!-- Espacio para información de Inversiones -->
+		</div>
+	</section>
+	<section id="proyecciones" class="menu-section">
+		<h2>Proyecciones</h2>
+		<div class="section-content">
+			<!-- Espacio para información de Proyecciones -->
+		</div>
+	</section>
+	<section id="educacion" class="menu-section">
+		<h2>Educación financiera</h2>
+		<div class="section-content">
+			<!-- Espacio para información de Educación financiera -->
+		</div>
+	</section>
+		.menu-section {
+			width: 100vw;
+			max-width: 900px;
+			margin: 80px auto 80px auto;
+			padding: 60px 24px;
+			background: #f7fafc;
+			border-radius: 24px;
+			box-shadow: 0 2px 16px rgba(27, 64, 121, 0.07);
+		}
+		.menu-section h2 {
+			color: #1B4079;
+			font-size: 2.2rem;
+			margin-bottom: 2rem;
+			font-weight: 700;
+			text-align: left;
+		}
+		.section-content {
+			min-height: 180px;
+			color: #4D7C8A;
+			font-size: 1.1rem;
+		}
+		.scroll-space {
+			height: 400vh;
+		}
+</body>
+</html>
