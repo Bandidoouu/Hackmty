@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inversiones</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/_static/style.css">
+</head>
+<body>
+    <div class="caja">
+        <h1>Inversiones</h1>
+        <p>Aprende a invertir de forma inteligente y haz crecer tu dinero.</p>
+                <div id="price">Cargando precio...</div>
+                <div>
+                    <label>Symbol: <input id="sym" value="BTCUSD" /></label>
+                    <label>Monto USD: <input id="amt" type="number" value="50" step="0.01"/></label>
+                    <button id="buy">Comprar</button>
+                    <button id="sell">Vender</button>
+                    <div id="trade-msg" class="msg" style="display:inline-block;margin-left:12px"></div>
+                </div>
+                <button class="volver" onclick="window.location.href='/_static/index.html'">Volver</button>
+    </div>
+        <script>
+        async function loadPrice(){
+            const s = document.getElementById('sym').value || 'BTCUSD';
+            try{
+                const r = await fetch('/gemini/price?symbol='+encodeURIComponent(s));
+                if(!r.ok) { document.getElementById('price').textContent = 'Error cargando precio'; return; }
+                const j = await r.json();
+                document.getElementById('price').textContent = `Precio ${j.symbol}: $${j.price}`;
+            }catch(e){ document.getElementById('price').textContent = 'Error cargando precio'; }
+        }
+        document.getElementById('sym').addEventListener('change', loadPrice);
+        const tradeMsgEl = document.getElementById('trade-msg');
+        async function doTrade(side){
+            tradeMsgEl.style.display = 'inline-block'; tradeMsgEl.style.color = '#1B4079'; tradeMsgEl.textContent = 'Procesando...';
+            const token = localStorage.getItem('access_token');
+            if(!token){ location.href='/_static/login.html'; return; }
+            const payload = { symbol: document.getElementById('sym').value, side: side, amount_usd: parseFloat(document.getElementById('amt').value) };
+            const buyBtn = document.getElementById('buy');
+            const sellBtn = document.getElementById('sell');
+            buyBtn.disabled = sellBtn.disabled = true;
+            try{
+                const r = await fetch('/gemini/trade', { method:'POST', headers: { 'Authorization':'Bearer '+token, 'Content-Type':'application/json' }, body: JSON.stringify(payload) });
+                if(!r.ok){ const t = await r.text(); tradeMsgEl.style.color = 'crimson'; tradeMsgEl.textContent = 'Trade failed: '+t; return; }
+                const j = await r.json(); tradeMsgEl.style.color = '#1B4079'; tradeMsgEl.textContent = 'Trade ejecutado: ' + JSON.stringify(j);
+            }catch(e){ tradeMsgEl.style.color = 'crimson'; tradeMsgEl.textContent = 'Error trade'; }
+            finally{ buyBtn.disabled = sellBtn.disabled = false; }
+        }
+        document.getElementById('buy').addEventListener('click', ()=> doTrade('buy'));
+        document.getElementById('sell').addEventListener('click', ()=> doTrade('sell'));
+        loadPrice();
+        </script>
+</body>
+</html>
