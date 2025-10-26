@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Banco Ejemplo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="navbar-logo">Banco Ejemplo</a>
+        <div class="navbar-menu">
+            <a href="signup.html" class="signup-btn">Sign Up</a>
+            <a href="login.html" class="login-btn">Login</a>
+        </div>
+    </nav>
+    <main class="main-flex">
+        <div class="right-text" style="width:100%;max-width:600px;margin:auto;">
+            <div class="welcome-message" style="margin-bottom:2rem;">
+                ¡Crea tu cuenta!
+                <span>Llena tus datos para registrarte</span>
+            </div>
+            <form class="caja" id="signup-form" style="width:100%;max-width:400px;margin:auto;">
+                <div class="signup-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;">
+                    <div style="display:flex;flex-direction:column;gap:1.2rem;">
+                        <input type="text" name="nombre" id="nombre" placeholder="Nombre" required minlength="2" maxlength="40" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+">
+                        <div class="error-message" id="error-nombre"></div>
+                        <input type="text" name="calle" id="calle" placeholder="Calle" required minlength="2" maxlength="50">
+                        <div class="error-message" id="error-calle"></div>
+                        <input type="text" name="municipio" id="municipio" placeholder="Municipio" required minlength="2" maxlength="40">
+                        <div class="error-message" id="error-municipio"></div>
+                        <input type="text" name="codigo_postal" id="codigo_postal" placeholder="Código Postal" required pattern="[0-9]{5}" maxlength="5">
+                        <div class="error-message" id="error-codigo_postal"></div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:1.2rem;">
+                        <input type="text" name="apellidos" id="apellidos" placeholder="Apellidos" required minlength="2" maxlength="60" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+">
+                        <div class="error-message" id="error-apellidos"></div>
+                        <input type="tel" name="celular" id="celular" placeholder="Celular" required pattern="[0-9]{10}" maxlength="10">
+                        <div class="error-message" id="error-celular"></div>
+                        <input type="text" name="numero" id="numero" placeholder="Número" required pattern="[0-9A-Za-z]+" maxlength="10">
+                        <div class="error-message" id="error-numero"></div>
+                        <input type="text" name="estado" id="estado" placeholder="Estado" required minlength="2" maxlength="40">
+                        <div class="error-message" id="error-estado"></div>
+                    </div>
+                </div>
+                <input type="text" name="nickname" id="nickname" placeholder="Nickname" required minlength="4" maxlength="20" pattern="[A-Za-z0-9_]+" style="margin-top:1.2rem;width:100%;">
+                <div class="error-message" id="error-nickname"></div>
+                <div style="position:relative;width:100%;margin-top:1.2rem;">
+                    <input type="password" name="password" id="password" placeholder="Contraseña" required minlength="8" maxlength="32" pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-={}:;,.?]).{8,32}" style="padding-right:2.5rem;width:100%;">
+                    <span id="toggle-password" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:1.3rem;color:#4D7C8A;user-select:none;">👁️</span>
+                </div>
+                <div class="error-message" id="error-password"></div>
+                <button type="submit" class="comenzar-btn" style="margin-top:2rem;width:100%;max-width:100%;">Registrarse</button>
+                <div id="signup-success" style="display:none;color:#4D7C8A;font-weight:700;text-align:center;margin-top:2rem;">¡Registro exitoso!</div>
+            </form>
+        </div>
+    </main>
+    <script>
+    function showError(inputId, message) {
+        document.getElementById('error-' + inputId).textContent = message;
+    }
+    function clearErrors() {
+        const errors = document.querySelectorAll('.error-message');
+        errors.forEach(e => e.textContent = '');
+    }
+    document.getElementById('toggle-password').addEventListener('click', function() {
+        const pwd = document.getElementById('password');
+        if (pwd.type === 'password') {
+            pwd.type = 'text';
+            this.textContent = '🙈';
+        } else {
+            pwd.type = 'password';
+            this.textContent = '👁️';
+        }
+    });
+    document.getElementById('signup-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        clearErrors();
+        let valid = true;
+        // Validaciones personalizadas
+        const nombre = document.getElementById('nombre');
+        if (!nombre.value.match(/^[A-Za-zÁÉÍÓÚáéíóúÑñ ]{2,40}$/)) {
+            showError('nombre', 'Nombre inválido (solo letras, mínimo 2 caracteres).');
+            valid = false;
+        }
+        const apellidos = document.getElementById('apellidos');
+        if (!apellidos.value.match(/^[A-Za-zÁÉÍÓÚáéíóúÑñ ]{2,60}$/)) {
+            showError('apellidos', 'Apellidos inválidos (solo letras, mínimo 2 caracteres).');
+            valid = false;
+        }
+        const celular = document.getElementById('celular');
+        if (!celular.value.match(/^[0-9]{10}$/)) {
+            showError('celular', 'Celular inválido (10 dígitos).');
+            valid = false;
+        }
+        const calle = document.getElementById('calle');
+        if (calle.value.length < 2 || calle.value.length > 50) {
+            showError('calle', 'Calle inválida (mínimo 2 caracteres).');
+            valid = false;
+        }
+        const numero = document.getElementById('numero');
+        if (!numero.value.match(/^[0-9A-Za-z]{1,10}$/)) {
+            showError('numero', 'Número inválido (solo letras y números, máximo 10 caracteres).');
+            valid = false;
+        }
+        const municipio = document.getElementById('municipio');
+        if (municipio.value.length < 2 || municipio.value.length > 40) {
+            showError('municipio', 'Municipio inválido (mínimo 2 caracteres).');
+            valid = false;
+        }
+        const estado = document.getElementById('estado');
+        if (estado.value.length < 2 || estado.value.length > 40) {
+            showError('estado', 'Estado inválido (mínimo 2 caracteres).');
+            valid = false;
+        }
+        const codigo_postal = document.getElementById('codigo_postal');
+        if (!codigo_postal.value.match(/^[0-9]{5}$/)) {
+            showError('codigo_postal', 'Código postal inválido (5 dígitos).');
+            valid = false;
+        }
+        const nickname = document.getElementById('nickname');
+        if (!nickname.value.match(/^[A-Za-z0-9_]{4,20}$/)) {
+            showError('nickname', 'Nickname inválido (4-20 caracteres, solo letras, números y _).');
+            valid = false;
+        }
+        const password = document.getElementById('password');
+        if (!password.value.match(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-={}:;,.?]).{8,32}$/)) {
+            showError('password', 'Contraseña inválida (8-32 caracteres, mayúscula, minúscula, número y símbolo).');
+            valid = false;
+        }
+        if (valid) {
+            // Enviar datos al backend
+            const usuario = {
+                nombre: document.getElementById('nombre').value,
+                apellidos: document.getElementById('apellidos').value,
+                celular: document.getElementById('celular').value,
+                calle: document.getElementById('calle').value,
+                numero: document.getElementById('numero').value,
+                municipio: document.getElementById('municipio').value,
+                estado: document.getElementById('estado').value,
+                codigo_postal: document.getElementById('codigo_postal').value,
+                nickname: document.getElementById('nickname').value,
+                password: document.getElementById('password').value
+            };
+            try {
+                const res = await fetch('http://localhost:3001/api/usuarios', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(usuario)
+                });
+                if (res.ok) {
+                    document.getElementById('signup-success').style.display = 'block';
+                    this.reset();
+                } else {
+                    const error = await res.json();
+                    document.getElementById('signup-success').style.display = 'none';
+                    showError('password', error.error || 'Error al registrar usuario');
+                }
+            } catch (err) {
+                showError('password', 'No se pudo conectar al servidor');
+            }
+        }
+    });
+    </script>
+</body>
+</html>
