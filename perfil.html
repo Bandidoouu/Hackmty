@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - Banco Ejemplo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="dashboard.html" class="navbar-logo">Banco Ejemplo</a>
+        <div class="navbar-menu">
+            <a href="#" id="logout-btn" class="login-btn">Logout</a>
+        </div>
+    </nav>
+
+    <main class="main-flex">
+        <div class="profile-page-container">
+            
+            <div class="profile-main-content">
+                <section class="profile-transactions profile-card">
+                    <h2>Historial de Transacciones</h2>
+                    <table id="transactions-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Descripción</th>
+                                <th>Tipo</th>
+                                <th>Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactions-tbody">
+                            <!-- Las transacciones se cargarán aquí -->
+                        </tbody>
+                    </table>
+                    <div id="activation-prompt" style="display: none; text-align: center; padding: 2rem;">
+                        <p>No se encontró un ID de cliente. Por favor, <a href="dashboard.html">active su cuenta financiera</a> desde el dashboard para ver sus transacciones.</p>
+                    </div>
+                </section>
+            </div>
+
+            <aside class="profile-sidebar">
+                <section class="profile-card">
+                    <h2>Mi Perfil</h2>
+                    <div class="user-details">
+                        <p><strong>Nombre:</strong> <span id="user-name">Cargando...</span></p>
+                        <p><strong>Email:</strong> <span id="user-email">Cargando...</span></p>
+                    </div>
+                    <div class="account-balance">
+                        <h3>Saldo Actual</h3>
+                        <p id="account-balance">$0.00</p>
+                    </div>
+                </section>
+
+                <section class="add-transaction-card">
+                    <h3>Añadir Transacción</h3>
+                    <form id="transaction-form">
+                        <input type="text" id="trans-description" placeholder="Descripción" required>
+                        <input type="number" id="trans-amount" placeholder="Monto" step="0.01" required>
+                        <button type="submit">Agregar</button>
+                    </form>
+                </section>
+            </aside>
+
+        </div>
+    </main>
+
+    <script src="perfil.js"></script>
+    <script>
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            localStorage.removeItem('accessToken');
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>

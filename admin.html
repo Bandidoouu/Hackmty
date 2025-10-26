@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración de Usuarios</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="navbar-logo">Banco Ejemplo</a>
+        <div class="navbar-menu">
+            <a href="signup.html" class="signup-btn">Sign Up</a>
+            <a href="login.html" class="login-btn">Login</a>
+        </div>
+    </nav>
+    <main class="main-flex">
+        <div class="right-text" style="width:100%;max-width:700px;margin:auto;">
+            <div class="welcome-message" style="margin-bottom:2rem;">
+                Administración de Usuarios
+                <span>Ingresa la contraseña de administradora para ver los registros</span>
+            </div>
+            <form id="admin-login" class="caja" style="width:100%;max-width:400px;margin:auto;">
+                <input type="password" id="admin-password" placeholder="Contraseña de administradora" required style="margin-bottom:1rem;">
+                <button type="submit" class="comenzar-btn" style="width:100%;">Ver usuarios</button>
+                <div id="admin-error" class="error-message" style="display:none;"></div>
+            </form>
+            <div id="usuarios-lista" style="display:none;margin-top:2rem;"></div>
+        </div>
+    </main>
+    <script>
+    document.getElementById('admin-login').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        document.getElementById('admin-error').style.display = 'none';
+        const password = document.getElementById('admin-password').value;
+        try {
+            const res = await fetch('http://localhost:3001/api/usuarios', {
+                method: 'GET',
+                headers: {
+                    'x-admin-password': password
+                }
+            });
+            if (!res.ok) {
+                document.getElementById('admin-error').textContent = 'Contraseña incorrecta o acceso no autorizado.';
+                document.getElementById('admin-error').style.display = 'block';
+                return;
+            }
+            const usuarios = await res.json();
+            mostrarUsuarios(usuarios);
+        } catch (err) {
+            document.getElementById('admin-error').textContent = 'Error de conexión con el backend.';
+            document.getElementById('admin-error').style.display = 'block';
+        }
+    });
+    function mostrarUsuarios(usuarios) {
+        const lista = document.getElementById('usuarios-lista');
+        if (!usuarios.length) {
+            lista.innerHTML = '<p>No hay usuarios registrados.</p>';
+        } else {
+            let html = '<table style="width:100%;border-collapse:collapse;background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(27,64,121,0.08);overflow:hidden;">';
+            html += '<thead><tr style="background:#f7fafc;color:#1B4079;font-weight:700;">';
+            html += '<th>Nombre</th><th>Apellidos</th><th>Celular</th><th>Calle</th><th>Número</th><th>Municipio</th><th>Estado</th><th>Código Postal</th><th>Nickname</th></tr></thead><tbody>';
+            usuarios.forEach(u => {
+                html += `<tr style="border-bottom:1px solid #e3eaf2;">
+                    <td>${u.nombre}</td>
+                    <td>${u.apellidos}</td>
+                    <td>${u.celular}</td>
+                    <td>${u.calle}</td>
+                    <td>${u.numero}</td>
+                    <td>${u.municipio}</td>
+                    <td>${u.estado}</td>
+                    <td>${u.codigo_postal}</td>
+                    <td>${u.nickname}</td>
+                </tr>`;
+            });
+            html += '</tbody></table>';
+        }
+        lista.innerHTML = html;
+        lista.style.display = 'block';
+    }
+    </script>
+</body>
+</html>

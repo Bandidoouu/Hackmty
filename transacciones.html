@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transacciones - Banco Ejemplo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="navbar-logo">Banco Ejemplo</a>
+        <div class="navbar-menu">
+            <a href="usuario.html" class="login-btn">Mi aplicación</a>
+            <a href="admin.html" class="signup-btn">Admin</a>
+        </div>
+    </nav>
+    <main class="main-flex" style="justify-content:center;align-items:flex-start;min-height:80vh;">
+        <div class="right-text" style="width:100%;max-width:600px;margin:auto;">
+            <div class="welcome-message" style="margin-bottom:2rem;text-align:center;width:100%;">
+                Transacciones
+                <span>Envía o recibe dinero fácilmente</span>
+            </div>
+            <form class="caja" id="transaccion-form" style="width:100%;max-width:400px;margin:auto;display:flex;flex-direction:column;align-items:center;">
+                <select name="tipo" id="tipo" required style="margin-bottom:1rem;width:100%;">
+                    <option value="">Selecciona tipo de transacción</option>
+                    <option value="enviar">Enviar dinero</option>
+                    <option value="recibir">Recibir dinero</option>
+                </select>
+                <input type="text" name="nickname" id="nickname" placeholder="Nickname del destinatario/remitente" required minlength="4" maxlength="20" pattern="[A-Za-z0-9_]+" style="width:100%;">
+                <input type="number" name="monto" id="monto" placeholder="Monto" required min="1" step="0.01" style="margin-bottom:1rem;width:100%;">
+                <button type="submit" class="comenzar-btn" style="margin-top:1rem;width:100%;max-width:100%;">Realizar transacción</button>
+                <div id="transaccion-success" style="display:none;color:#4D7C8A;font-weight:700;text-align:center;margin-top:2rem;">¡Transacción realizada!</div>
+                <div id="transaccion-error" class="error-message" style="display:none;width:100%;"></div>
+            </form>
+            <section id="historial" style="margin-top:3rem;">
+                <h2 style="color:#1B4079;">Historial de transacciones</h2>
+                <div id="historial-lista"></div>
+            </section>
+        </div>
+    </main>
+    <script>
+    // Obtener el usuario logueado (simulación)
+    const usuarioActual = localStorage.getItem('usuarioLogueado');
+    // Historial por usuario
+    function cargarHistorial() {
+        const lista = document.getElementById('historial-lista');
+        if (!usuarioActual) {
+            lista.innerHTML = '<div style="color:#c00;font-weight:700;text-align:center;padding:1rem 0;">Debes iniciar sesión para ver tu historial y realizar transacciones.</div>';
+            document.getElementById('transaccion-form').style.display = 'none';
+            return;
+        } else {
+            document.getElementById('transaccion-form').style.display = 'flex';
+        }
+        const historial = JSON.parse(localStorage.getItem('historialTransacciones_' + usuarioActual) || '[]');
+        if (!historial.length) {
+            lista.innerHTML = '<p>No hay transacciones registradas.</p>';
+        } else {
+            let html = '<table style="width:100%;border-collapse:collapse;background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(27,64,121,0.08);overflow:hidden;">';
+            html += '<thead><tr style="background:#f7fafc;color:#1B4079;font-weight:700;">';
+            html += '<th>Tipo</th><th>Nickname</th><th>Monto</th><th>Fecha</th></tr></thead><tbody>';
+            historial.forEach(t => {
+                html += `<tr style="border-bottom:1px solid #e3eaf2;">
+                    <td>${t.tipo === 'enviar' ? 'Enviado' : 'Recibido'}</td>
+                    <td>${t.nickname}</td>
+                    <td>$${parseFloat(t.monto).toFixed(2)}</td>
+                    <td>${t.fecha}</td>
+                </tr>`;
+            });
+            html += '</tbody></table>';
+        }
+        lista.innerHTML = html;
+    }
+    cargarHistorial();
+    document.getElementById('transaccion-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        document.getElementById('transaccion-success').style.display = 'none';
+        document.getElementById('transaccion-error').style.display = 'none';
+        if (!usuarioActual) {
+            document.getElementById('transaccion-error').textContent = 'Debes iniciar sesión para realizar transacciones.';
+            document.getElementById('transaccion-error').style.display = 'block';
+            return;
+        }
+        const tipo = document.getElementById('tipo').value;
+        const nickname = document.getElementById('nickname').value;
+        const monto = document.getElementById('monto').value;
+        if (!tipo || !nickname || !monto || monto <= 0) {
+            document.getElementById('transaccion-error').textContent = 'Completa todos los campos correctamente.';
+            document.getElementById('transaccion-error').style.display = 'block';
+            return;
+        }
+        // Validar que el nickname existe en la base de datos
+        try {
+            const res = await fetch('http://localhost:3001/api/usuarios');
+            if (!res.ok) {
+                document.getElementById('transaccion-error').textContent = 'Error de conexión con el backend.';
+                document.getElementById('transaccion-error').style.display = 'block';
+                return;
+            }
+            const usuarios = await res.json();
+            const existe = usuarios.some(u => u.nickname === nickname);
+            if (!existe) {
+                document.getElementById('transaccion-error').textContent = 'El usuario destinatario/remitente no existe.';
+                document.getElementById('transaccion-error').style.display = 'block';
+                return;
+            }
+            // Guardar en historial individual
+            const historialKey = 'historialTransacciones_' + usuarioActual;
+            const historial = JSON.parse(localStorage.getItem(historialKey) || '[]');
+            historial.push({ tipo, nickname, monto, fecha: new Date().toLocaleString() });
+            localStorage.setItem(historialKey, JSON.stringify(historial));
+            document.getElementById('transaccion-success').style.display = 'block';
+            this.reset();
+            cargarHistorial();
+        } catch (err) {
+            document.getElementById('transaccion-error').textContent = 'No se pudo conectar al servidor.';
+            document.getElementById('transaccion-error').style.display = 'block';
+        }
+    });
+    </script>
+</body>
+</html>

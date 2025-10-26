@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Banco Ejemplo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .dashboard-container {
+            text-align: center;
+            padding: 2rem;
+        }
+        .welcome-message {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2C3E50;
+            margin-bottom: 2rem;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            max-width: 1000px;
+            margin: auto;
+        }
+        .option-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 2rem;
+            text-decoration: none;
+            color: #2C3E50;
+            font-size: 1.5rem;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 150px;
+        }
+        .option-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(77, 124, 138, 0.2);
+            color: #4D7C8A;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="dashboard.html" class="navbar-logo">Banco Ejemplo</a>
+        <div class="navbar-menu">
+            <a href="#" id="logout-btn" class="login-btn">Logout</a>
+        </div>
+    </nav>
+
+    <main class="dashboard-container">
+        <div id="welcome-message" class="welcome-message">¡Bienvenido!</div>
+        <div class="options-grid">
+            <a href="perfil.html" class="option-card">Mi Perfil</a>
+            <a href="usuario.html" class="option-card">Finanzas y Asistente</a>
+            <a href="planes.html" class="option-card">Planes</a>
+            <a href="inversiones.html" class="option-card">Inversiones</a>
+            <a href="educacion.html" class="option-card">Educación</a>
+        </div>
+        <div style="margin-top: 2rem;">
+            <button id="bootstrap-btn" class="comenzar-btn">Activar Cuenta Financiera</button>
+            <p id="bootstrap-status" style="margin-top: 1rem; font-weight: 700;"></p>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('accessToken');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const headers = { 'Authorization': `Bearer ${token}` };
+
+            try {
+                const res = await fetch('http://localhost:8000/auth/me', { headers });
+                if (!res.ok) throw new Error('Token inválido');
+                const user = await res.json();
+                document.getElementById('welcome-message').textContent = `¡Hola, ${user.first_name}!`;
+            } catch (error) {
+                localStorage.removeItem('accessToken');
+                window.location.href = 'login.html';
+            }
+
+            document.getElementById('bootstrap-btn').addEventListener('click', async () => {
+                const statusEl = document.getElementById('bootstrap-status');
+                statusEl.textContent = 'Activando...';
+                statusEl.style.color = '#3498db';
+                try {
+                    const res = await fetch('http://localhost:8000/auth/nessie/bootstrap', {
+                        method: 'POST',
+                        headers
+                    });
+                    const data = await res.json();
+                    if (res.ok) {
+                        statusEl.textContent = '¡Cuenta activada con éxito! Recargando...';
+                        statusEl.style.color = '#27ae60';
+                        // FORZAR LA RECARGA DE LA PÁGINA PARA LIMPIAR EL CACHÉ
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1500); // Espera 1.5 segundos para que el usuario lea el mensaje
+                    } else {
+                        throw new Error(data.detail || 'Error desconocido');
+                    }
+                } catch (error) {
+                    statusEl.textContent = `Error: ${error.message}`;
+                    statusEl.style.color = '#c0392b';
+                }
+            });
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            localStorage.removeItem('accessToken');
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>

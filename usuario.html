@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanzas - Banco Ejemplo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="dashboard.html" class="navbar-logo">Banco Ejemplo</a>
+        <div class="navbar-menu">
+            <a href="#" id="logout-btn" class="login-btn">Logout</a>
+        </div>
+    </nav>
+
+    <main class="main-flex">
+        <div class="finance-grid">
+            <!-- Transactions Section -->
+            <section class="finance-section">
+                <h2>Transacciones</h2>
+                <div id="transaction-list" class="transaction-list">
+                    <!-- Transactions will be loaded here -->
+                </div>
+                <form id="transaction-form" class="transaction-form">
+                    <h3>Nueva Transacción</h3>
+                    <input type="text" id="trans-description" placeholder="Descripción" required>
+                    <input type="number" id="trans-amount" placeholder="Monto" required>
+                    <button type="submit" class="comenzar-btn">Agregar</button>
+                </form>
+            </section>
+
+            <!-- Gemini Chat Section -->
+            <section class="finance-section">
+                <h2>Asistente Financiero</h2>
+                <div id="chat-container" class="chat-container">
+                    <div id="chat-messages" class="chat-messages">
+                        <div class="chat-message bot">Hola, soy tu asistente. ¿En qué puedo ayudarte con tus finanzas hoy?</div>
+                    </div>
+                    <form id="chat-form" class="chat-form">
+                        <input type="text" id="chat-input" placeholder="Escribe tu pregunta...">
+                        <button type="submit">Enviar</button>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="usuario.js"></script>
+    <script>
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            localStorage.removeItem('accessToken');
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>
